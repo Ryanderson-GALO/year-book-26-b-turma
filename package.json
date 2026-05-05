@@ -1,0 +1,21 @@
+{
+  "name": "year-book-26-b-turma",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ryanderson-GALO/year-book-26-b-turma.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ryanderson-GALO/year-book-26-b-turma/issues"
+  },
+  "homepage": "https://github.com/Ryanderson-GALO/year-book-26-b-turma#readme"
+}
