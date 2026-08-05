@@ -9,6 +9,12 @@
     - O campo `senhaHash` nunca é retornado em nenhuma resposta
     - Erros seguem o formato `{ "erro": "mensagem descritiva" }`
 
+    ## CORS
+
+   Esta API tem CORS habilitado para qualquer origem. Você pode consumi-la
+   de qualquer domínio (localhost, Vercel, etc.) sem configuração adicional
+   no cliente.
+
 ## Auth
 
 ### POST /auth/register
