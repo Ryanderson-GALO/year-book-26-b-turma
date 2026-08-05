@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model Aluno {
   id            Int        @id @default(autoincrement())
   nome          String
@@ -31,6 +26,11 @@ model Mensagem {
   texto     String
   imagemUrl String?
   autorId   Int
-  autor     Aluno    @relation(fields: [autorId], references: [id])
   criadoEm  DateTime @default(now())
+  autor     Aluno    @relation(fields: [autorId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
 }

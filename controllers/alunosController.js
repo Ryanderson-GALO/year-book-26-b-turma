@@ -15,45 +15,50 @@ const selectSemSenha = {
 };
 
 // GET /alunos — lista todos os alunos
-export async function listarAlunos(req, res) {
-  const alunos = await prisma.aluno.findMany({
-    select: selectSemSenha, // retorna todos os campos EXCETO senhaHash
-  });
-  res.json(alunos); // responde com o array de alunos em JSON
-}
+export async function listarAlunos(req, res, next) {
+     try {
+       const alunos = await prisma.aluno.findMany({
+         select: selectSemSenha,
+       });
+       res.json(alunos);
+     } catch (erro) {
+       next(erro);
+     }
+   }
 
 // GET /alunos/:id — busca um aluno pelo ID
-export async function buscarAluno(req, res) {
-  const { id } = req.params; // extrai o :id da URL
-  const aluno = await prisma.aluno.findUnique({
-    where: { id: Number(id) }, // converte string → number
-    select: selectSemSenha,    // omite senhaHash
-  });
-
-  if (!aluno) {
-    return res.status(404).json({ erro: 'Aluno não encontrado' }); // null → 404
+export async function buscarAluno(req, res, next) {
+  try {
+    const { id } = req.params;
+    const aluno = await prisma.aluno.findUnique({
+      where: { id: Number(id) },
+      select: selectSemSenha,
+    });
+    if (!aluno) return res.status(404).json({ erro: 'Aluno não encontrado' });
+    res.json(aluno);
+  } catch (erro) {
+    next(erro);
   }
-
-  res.json(aluno); // retorna o aluno encontrado
 }
 
 // POST /alunos — cria um novo aluno
-export async function criarAluno(req, res) {
-  // 1. Extrai os campos de req.body
-  const { nome, email, senhaHash, cidade, frase, planosFuturos } = req.body;
+export async function criarAluno(req, res, next) {
+  try {
+    const { nome, email, senhaHash, cidade, frase, planosFuturos } = req.body;
 
-  // 2. Cria o aluno no banco via Prisma, já omitindo senhaHash na resposta
-  const alunoCriado = await prisma.aluno.create({
-    data: { nome, email, senhaHash, cidade, frase, planosFuturos },
-    select: selectSemSenha,
-  });
+    const alunoCriado = await prisma.aluno.create({
+      data: { nome, email, senhaHash, cidade, frase, planosFuturos },
+      select: selectSemSenha,
+    });
 
-  // 3. Retorna 201 (Created) com o aluno criado
-  res.status(201).json(alunoCriado);
+    res.status(201).json(alunoCriado);
+  } catch (erro) {
+    next(erro);
+  }
 }
 
 // PUT /alunos/:id — atualiza um aluno existente
-export async function atualizarAluno(req, res) {
+export async function atualizarAluno(req, res, next) {
   const { id } = req.params;      // 1. id vem da URL
   const dados = req.body;         // 2. dados atualizados vêm do body
 
@@ -72,7 +77,7 @@ export async function atualizarAluno(req, res) {
 }
 
 // DELETE /alunos/:id — deleta um aluno
-export async function deletarAluno(req, res) {
+export async function deletarAluno(req, res, next) {
   const { id } = req.params; // 1. id vem da URL
 
   try {

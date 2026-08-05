@@ -1,40 +1,43 @@
 import prisma from '../prisma/client.js';
-export async function listarMensagens(req, res) {
-  const mensagens = await prisma.mensagem.findMany({
-    orderBy: { criadoEm: 'desc' },  
-    include: {
-      autor: {                        
-        select: {
-          nome: true,                
-          fotoUrl: true,              
+
+export async function listarMensagens(req, res, next) {
+  try {
+    const mensagens = await prisma.mensagem.findMany({
+      include: {
+        autor: {
+          select: { nome: true, fotoUrl: true },
         },
       },
-    },
-  });
-  res.json(mensagens);
-}
-
-
-export async function criarMensagem(req, res) {
-  const { texto, imagemUrl, autorId } = req.body;
-
-  if (!texto) {
-    return res.status(400).json({ erro: 'O campo texto é obrigatório' });
+    });
+    res.json(mensagens);
+  } catch (erro) {
+    next(erro);
   }
-
-  const mensagemCriada = await prisma.mensagem.create({
-    data: {
-      texto,
-      imagemUrl,
-      autorId: Number(autorId),
-    },
-  });
-
-  res.status(201).json(mensagemCriada);
 }
 
+export async function criarMensagem(req, res, next) {
+  try {
+    const { texto, imagemUrl, autorId } = req.body;
 
-export async function deletarMensagem(req, res) {
+    if (!texto) {
+      return res.status(400).json({ erro: 'O campo texto é obrigatório' });
+    }
+
+    const mensagemCriada = await prisma.mensagem.create({
+      data: {
+        texto,
+        imagemUrl,
+        autorId: Number(autorId),
+      },
+    });
+
+    res.status(201).json(mensagemCriada);
+  } catch (erro) {
+    next(erro);
+  }
+}
+
+export async function deletarMensagem(req, res, next) {
   const { id } = req.params;
 
   try {
